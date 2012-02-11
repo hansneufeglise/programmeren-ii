@@ -26,6 +26,8 @@ public class BoterKaasEieren {
             return new ComputerSpeler(m, new DommeStrategie());
         else if (s.equals("-S"))
             return new ComputerSpeler(m, new SlimmeStrategie());
+        else if (s.equals("-P"))
+            return new ComputerSpeler(m, new PerfecteStrategie());
         else
             return new MensSpeler(s, m);
     }
