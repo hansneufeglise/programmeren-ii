@@ -1,6 +1,7 @@
 package week2.kaarten;
 
 import java.io.*; 
+import java.util.*;
 
 /**
  * Representatie van speelkaart, met rang en kleur.
@@ -35,6 +36,15 @@ public class Kaart {
 
     // ---- klassenmethoden -------------------------------------
 
+    public static void main(String args[]) throws FileNotFoundException {
+      PrintWriter pw = new PrintWriter(System.out, true);
+      Kaart kaart = new Kaart('K', '5');
+      if (args.length > 0) {
+        pw = new PrintWriter(args[0]);
+      }
+      kaart.schrijf(pw);
+    }
+    
     /**
      * Translates a char encoding of rang into it's String representation.
      * @return the String repr of rang
@@ -157,9 +167,47 @@ public class Kaart {
         return null; // NOG TOE TE VOEGEN: BODY + JAVADOC !
     }
 
-    public static Kaart lees(BufferedReader in) throws EOFException 
-    {
-        return null; // NOG TOE TE VOEGEN: BODY + JAVADOC !
+    /*
+    DemethodeleestuitdeBufferedReader inenlevertopbasisvandezeinvoereenKaart-
+    instantie. Zorg dat
+    • lees de waarde null oplevert als er uit de BufferedReader geen geldige kaart te construeren is, bijvoorbeeld omdat het formaat van de gelezen tekstregel niet overeen- komtmet”kleurrang”,zoals,bijvoorbeeld,"Haarten aas"of"Klaveren 3";
+    ￼• lees een EOFException genereert als de BufferedReader bee ̈indigd is.
+    Op het practicumgebied kunt u de klasse week2.kaarten.KaartLezer vinden die (ondermeer)
+    gebruikt kan worden om de in Vraag 2.1.9 ge ̈ımplementeerde methode lees te testen.
+    */
+    /**
+     * Lees een kaart van een BufferedReader
+     * @param   in BufferedReader de buffered reader.
+     */
+    public static Kaart lees(BufferedReader in) throws EOFException {      
+      Scanner scanner;
+      Kaart kaart = null;
+      Character kleur, rang;
+
+      // Probeer een nieuwe Scanner te maken van de BufferedReader
+      try {
+        if (in.ready()) {
+          scanner = new Scanner(in.readLine());
+        
+          // Splits op spatie
+    		  scanner.useDelimiter("[\\s]+");      
+
+          // Kleur en rang uitlezen
+      		kleur = kleurString2Char(scanner.next());
+    			rang  = rangString2Char(scanner.next());
+    			
+        } else {
+          throw new EOFException();
+        }
+  		} catch (IOException e) {
+  			throw new EOFException();
+  		}
+  		  		
+			if (geldigeKleur(kleur) && geldigeRang(rang)) {
+			  kaart = new Kaart(kleur, rang);
+			}      
+  		
+  		return kaart;
     }
     
     // ---- instantievariabelen -----------------------------------
@@ -213,19 +261,19 @@ public class Kaart {
     public String toString() {
         String res;
         switch (getKleur()) {
-        case KLAVEREN: res = "Klaveren "; break;
-        case RUITEN: res = "Ruiten "; break;
-        case HARTEN: res = "Harten "; break;
-        default: res = "Schoppen "; 
+          case KLAVEREN: res = "Klaveren "; break;
+          case RUITEN: res = "Ruiten "; break;
+          case HARTEN: res = "Harten "; break;
+          default: res = "Schoppen "; 
         }
 
         switch (getRang()) {
-        case TIEN: res = res + "10"; break;
-        case BOER: res = res + "boer"; break;
-        case VROUW: res = res + "vrouw"; break;
-        case HEER: res = res + "heer"; break;
-        case AAS: res = res + "aas"; break;
-        default: res = res + getRang();
+          case TIEN: res = res + "10"; break;
+          case BOER: res = res + "boer"; break;
+          case VROUW: res = res + "vrouw"; break;
+          case HEER: res = res + "heer"; break;
+          case AAS: res = res + "aas"; break;
+          default: res = res + getRang();
         }
 
         return res;
@@ -290,8 +338,24 @@ public class Kaart {
         // NOG TOE TE VOEGEN: BODY + JAVADOC !
     }
     
+    
+    /*
+    
+    Voeg aan de klasse Kaart een methode schrijf toe, met als parameter een PrintWri-
+    ter, die er voor zorgt dat het object waarop de methode wordt aangeroepen een String-
+    beschrijving van zichzelf (verkregen door een aanroep van toString) naar de PrintWri-
+    ter schrijft.
+        
+    */    
+    
+    /**
+     * Schrijft een tekstuele beschrijving van
+     * de kaart weg naar een PrintWriter
+     * @param   pw PrintWriter om naar weg te schrijven/
+     */
     public void schrijf(PrintWriter pw) {
-        // NOG TOE TE VOEGEN: BODY + JAVADOC !
+      pw.write(this.toString());
+      pw.close();
     }
 
 }

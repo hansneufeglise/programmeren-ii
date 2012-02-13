@@ -37,7 +37,7 @@ public class IntBoom extends Boom<Integer> {
       int right = (this.getRight() == null)  ? 0 : this.getRight().max();
       return Math.max(Math.max(left, right), this.getValue());
     }
-                                         //dsfs
+
     public static void main(String[] args) {
         IntBoom bb 
             = new IntBoom(9, 
