@@ -2,55 +2,55 @@ package week1.bke;
 
 public class PerfecteStrategie implements Strategie {
   
-  int ONBEKEND    = 0;
-  int VERLIEZEND  = 1;
-  int NEUTRAAL    = 2;
-  int WINNEND     = 3;
+  private static final int ONBEKEND    = 0;
+  private static final int VERLIEZEND  = 1;
+  private static final int NEUTRAAL    = 2;
+  private static final int WINNEND     = 3;
   
   public String getNaam() {
     return "Perfecte";
   }
   
   public int bepaalZet(Bord b, Mark m) {
-    return vindBesteZet(b, m)[0];
+    Bord bordKopie = b.deepCopy();
+    return vindBesteZet(bordKopie, m)[0];
   }
   
   private int[] vindBesteZet(Bord b, Mark m) {
-    Bord bordKopie = b.deepCopy();
     int tgsKwal, besteZet = 0;
-    int kwal = this.ONBEKEND;
-    int besteKwal = this.ONBEKEND;
+    int kwal = ONBEKEND;
+    int besteKwal = ONBEKEND;
     
     // Ga elke mogelijke zet af:
     for (int i = 0; i < Bord.DIM * Bord.DIM; i++) {
-      if (bordKopie.isLeegVakje(i)) {
+      if (b.isLeegVakje(i)) {
         // 1. Probeer zet
-        bordKopie.setVakje(i, m);
+        b.setVakje(i, m);
         
         // 2. Bepaal kwaliteit
-        if (bordKopie.isWinnaar(m)) {
+        if (b.isWinnaar(m)) {
           // (a) Speler wint
-          kwal = this.WINNEND;
+          kwal = WINNEND;
         } else {
           // (b) Inverse van beste zet tegenstander
-          tgsKwal = vindBesteZet(bordKopie, m.other())[1];
-          if (tgsKwal == this.WINNEND) {
-             kwal = this.VERLIEZEND;
-           } else if (tgsKwal == this.VERLIEZEND) {
-             kwal = this.WINNEND;
+          tgsKwal = vindBesteZet(b, m.other())[1];
+          if (tgsKwal == WINNEND) {
+             kwal = VERLIEZEND;
+           } else if (tgsKwal == VERLIEZEND) {
+             kwal = WINNEND;
            } else {
-             kwal = this.NEUTRAAL;
+             kwal = NEUTRAAL;
            }
         }
         
         // 3. Vervang zet indien beter
-        if (besteKwal == this.ONBEKEND || kwal + Math.round(Math.random()) > besteKwal) {
+        if (besteKwal == ONBEKEND || kwal + Math.round(Math.random()) > besteKwal) {
           besteKwal = kwal;
           besteZet  = i;
         }
         
         // 4. Reset zet
-        bordKopie.setVakje(i, Mark.LEEG);
+        b.setVakje(i, Mark.LEEG);
       }
     }
     

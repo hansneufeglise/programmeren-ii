@@ -21,7 +21,7 @@ public class BoterKaasEieren {
      * @param  m de markering van de Speler
      * @return Speler-object
      */
-    private static Speler createSpeler(String s, Mark m) {
+    private static Speler createSpeler(String s, Mark m) {      
         if (s.equals("-D"))
             return new ComputerSpeler(m, new DommeStrategie());
         else if (s.equals("-S"))
