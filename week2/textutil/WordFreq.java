@@ -19,7 +19,7 @@ public class WordFreq implements Analyzer {
      * @throws IOException als er iets mis gaat bij het lezen
      */
     public void process(String fname, BufferedReader r) throws IOException {
-        System.out.println("WordFreq.process: IK DOE NOG NIETS!");
+
     }
 
     public static void main(String[] args) {

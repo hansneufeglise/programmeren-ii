@@ -18,7 +18,31 @@ public class WordCount implements Analyzer {
      * @throws IOException als er iets mis gaat bij het lezen
      */
     public void process(String fname, BufferedReader reader) throws IOException {
-        System.out.println("WordCount.process: IK DOE NOG NIETS!");
+    	boolean doorgaan = true;
+    	int[] counter = new int[3];
+    	
+    	System.out.println("Bestandsnaam: " + fname);
+                
+    	while(doorgaan) {
+           	String line = reader.readLine();
+           	if(line != null) {
+           		counter[2]++; // counts lines
+	        	counter[0] += line.length(); // counts characters
+
+           		Scanner s = new Scanner(line);
+    	        while(s.hasNext()) {
+    	        	s.next(); // moves pointer one ahead
+    	        	counter[1]++; // counts words
+    	        }
+           	} else {
+           		doorgaan = false;
+           	}
+        }
+
+    	System.out.println();
+    	System.out.println(String.format("%6s", counter[0]) + "  karakters");
+    	System.out.println(String.format("%6s", counter[1]) + "  woorden");
+    	System.out.println(String.format("%6s", counter[2]) + "  regels");
     }
 
     public static void main(String[] args) {

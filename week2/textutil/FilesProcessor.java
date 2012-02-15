@@ -25,6 +25,23 @@ public class FilesProcessor {
      * Als (args.length == 0) wordt er van de System.in gelezen.
      */
     public void openAndProcess(String[] args) {
-        System.out.println("FilesProcessor.openAndProcess: IK DOE NOG NIETS!");
+        if (args.length == 0) {
+        	try {
+        		analyzer.process("-", new BufferedReader(new InputStreamReader(System.in)));
+        	} catch (IOException e) { System.out.println("test"); }
+        } else {
+	    	for (int i = 0; i < args.length; i++) {
+	        	try {
+	        		analyzer.process(args[i], new BufferedReader(new FileReader(args[i])));
+	        	} catch (IOException e) {
+	        		System.out.println(args[i] + " bestaat niet!");
+	        	}
+	    	}
+        }
+    }
+
+    public static void main(String[] args) {
+    	FilesProcessor fp = new FilesProcessor(new WordCount());
+    	fp.openAndProcess(args);
     }
 }
