@@ -39,9 +39,4 @@ public class FilesProcessor {
 	    	}
         }
     }
-
-    public static void main(String[] args) {
-    	FilesProcessor fp = new FilesProcessor(new WordCount());
-    	fp.openAndProcess(args);
-    }
 }
