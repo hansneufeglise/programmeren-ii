@@ -81,7 +81,7 @@ public class WordFreq implements Analyzer {
 		// sorting from high to low and first to last appearance
 		@Override
 		public int compareTo(Word w) {
-			return w.count - count - 1; // minus 1 so words with same count are seen as different words
+			return (w.count - count == 0) ? -1 : w.count - count; // minus 1 so words with same count are seen as different words
 		}
 
 		@Override
