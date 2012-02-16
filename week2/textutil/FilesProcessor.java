@@ -27,14 +27,14 @@ public class FilesProcessor {
     public void openAndProcess(String[] args) {
         if (args.length == 0) {
         	try {
-        		analyzer.process("-", new BufferedReader(new InputStreamReader(System.in)));
-        	} catch (IOException e) { System.out.println("test"); }
+        		analyzer.process("- \n-- eindig invoer met :EXIT --", new BufferedReader(new InputStreamReader(System.in)));
+        	} catch (IOException e) { System.out.println("De terminal heeft gefaald"); }
         } else {
 	    	for (int i = 0; i < args.length; i++) {
 	        	try {
 	        		analyzer.process(args[i], new BufferedReader(new FileReader(args[i])));
 	        	} catch (IOException e) {
-	        		System.out.println(args[i] + " bestaat niet!");
+	        		System.out.println(args[i] + " bestaat niet");
 	        	}
 	    	}
         }

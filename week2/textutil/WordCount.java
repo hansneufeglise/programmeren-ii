@@ -25,7 +25,7 @@ public class WordCount implements Analyzer {
                 
     	while(doorgaan) {
            	String line = reader.readLine();
-           	if(line != null) {
+           	if(line != null && !line.equals("EXIT")) {
            		counter[2]++; // counts lines
 	        	counter[0] += line.length(); // counts characters
 
