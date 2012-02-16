@@ -60,9 +60,7 @@ public class WordFreq implements Analyzer {
     	System.out.println("Frequentie waarmee woorden voorkomen");
     	Iterator<Word> itrWoordenSorted = woordenSorted.iterator();
 
-    	int i = 0;
-    	while(itrWoordenSorted.hasNext() && i < 10) {
-    		i++;
+    	while (itrWoordenSorted.hasNext()) {
     		System.out.println(" " + itrWoordenSorted.next());
     	}
     	
@@ -81,7 +79,7 @@ public class WordFreq implements Analyzer {
 		// sorting from high to low and first to last appearance
 		@Override
 		public int compareTo(Word w) {
-			return (w.count - count == 0) ? -1 : w.count - count; // minus 1 so words with same count are seen as different words
+			return (w.count - count == 0) ? this.word.compareTo(w.word) : w.count - count; // minus 1 so words with same count are seen as different words
 		}
 
 		@Override
