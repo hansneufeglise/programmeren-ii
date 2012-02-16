@@ -9,7 +9,7 @@ import java.util.*;
  * @author  Arend Rensink, Rieks op den Akker en Theo Ruys
  * @version 2006.02.05
  */
-public class Kaart { 
+public class Kaart implements Serializable { 
     
     // ---- klassenconstanten -----------------------------------
     
@@ -159,22 +159,50 @@ public class Kaart {
         else return r2 == r1+1;
     }
 
+    /**
+     * Lees een kaart van een DataInput
+     * @param   in DataInput de data input.
+     */
     public static Kaart lees(DataInput in) throws EOFException {
-        return null; // NOG TOE TE VOEGEN: BODY + JAVADOC !
+      char rang;
+      char kleur;
+      
+      try {
+        rang   = in.readChar();
+        kleur  = in.readChar();      
+      } catch (IOException e) {
+  			throw new EOFException();
+  		}
+      
+      if (geldigeKleur(kleur) && geldigeRang(rang)) {
+			  return new Kaart(kleur, rang);
+			}
+  		
+  		return null;
     }
-
+    
+    /**
+      * Lees een kaart van een ObjectInput
+      * @param   ois ObjectInput de object input.
+      */
     public static Kaart lees(ObjectInput ois) throws EOFException {
-        return null; // NOG TOE TE VOEGEN: BODY + JAVADOC !
+      Kaart kaart = null;
+      
+      try {
+        Object obj = ois.readObject();          
+        kaart = (Kaart)obj;
+        
+      } catch (ClassNotFoundException e) {
+        
+      } catch (NoSuchElementException e) {
+        
+      } catch (IOException e) {
+  			throw new EOFException();
+      }
+
+      return kaart;
     }
 
-    /*
-    DemethodeleestuitdeBufferedReader inenlevertopbasisvandezeinvoereenKaart-
-    instantie. Zorg dat
-    • lees de waarde null oplevert als er uit de BufferedReader geen geldige kaart te construeren is, bijvoorbeeld omdat het formaat van de gelezen tekstregel niet overeen- komtmet”kleurrang”,zoals,bijvoorbeeld,"Haarten aas"of"Klaveren 3";
-    ￼• lees een EOFException genereert als de BufferedReader bee ̈indigd is.
-    Op het practicumgebied kunt u de klasse week2.kaarten.KaartLezer vinden die (ondermeer)
-    gebruikt kan worden om de in Vraag 2.1.9 ge ̈ımplementeerde methode lees te testen.
-    */
     /**
      * Lees een kaart van een BufferedReader
      * @param   in BufferedReader de buffered reader.
@@ -189,13 +217,15 @@ public class Kaart {
         if (in.ready()) {
           scanner = new Scanner(in.readLine());
         
-          // Splits op spatie
-    		  scanner.useDelimiter("[\\s]+");      
-
           // Kleur en rang uitlezen
-      		kleur = kleurString2Char(scanner.next());
-    			rang  = rangString2Char(scanner.next());
-    			
+          if (scanner.hasNext()) {
+            kleur = kleurString2Char(scanner.next());        		
+          }
+          
+          if (scanner.hasNext()) {
+            rang  = rangString2Char(scanner.next());      			
+          }
+          
         } else {
           throw new EOFException();
         }
@@ -205,7 +235,7 @@ public class Kaart {
   		  		
 			if (geldigeKleur(kleur) && geldigeRang(rang)) {
 			  kaart = new Kaart(kleur, rang);
-			}      
+			}
   		
   		return kaart;
     }
@@ -329,13 +359,23 @@ public class Kaart {
     public boolean gaatInRangVoorafAan(Kaart kaart) {
         return rangOpvolgend(this.getRang(), kaart.getRang());
     }
-
+    
+    /**
+     * Schrijft een kaart weg naar DataOutput
+     * @param   out DataOutput om naar weg te schrijven
+     */
     public void schrijf(DataOutput out) throws IOException {
-        // NOG TOE TE VOEGEN: BODY + JAVADOC !
+        out.writeChar(this.rang);
+        out.writeChar(this.kleur);
     }
 
+    /**
+     * Schrijft een kaart weg naar ObjectOutput
+     * @param   oos ObjectOutput om naar weg te schrijven
+     */
     public void schrijf(ObjectOutput oos) throws IOException {
-        // NOG TOE TE VOEGEN: BODY + JAVADOC !
+      oos.writeObject(this);
+      oos.close();
     }
     
     
@@ -354,7 +394,7 @@ public class Kaart {
      * @param   pw PrintWriter om naar weg te schrijven/
      */
     public void schrijf(PrintWriter pw) {
-      pw.write(this.toString());
+      pw.println(this.toString());
       pw.close();
     }
 

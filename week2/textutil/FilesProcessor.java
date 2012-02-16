@@ -28,7 +28,9 @@ public class FilesProcessor {
         if (args.length == 0) {
         	try {
         		analyzer.process("- \n-- eindig invoer met :EXIT --", new BufferedReader(new InputStreamReader(System.in)));
-        	} catch (IOException e) { System.out.println("De terminal heeft gefaald"); }
+        	} catch (IOException e) {
+        	  System.out.println("De terminal heeft gefaald");
+        	}
         } else {
 	    	for (int i = 0; i < args.length; i++) {
 	        	try {

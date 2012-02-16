@@ -1,4 +1,6 @@
 *.class
+*.dat
+*.obj
 lib/
 .classpath
 .project

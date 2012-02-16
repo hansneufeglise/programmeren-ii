@@ -23,14 +23,14 @@ public class WordCount implements Analyzer {
     	
     	System.out.println("Bestandsnaam: " + fname);
                 
-    	while(doorgaan) {
+    	while (doorgaan) {
            	String line = reader.readLine();
-           	if(line != null && !line.equals("EXIT")) {
+           	if (line != null && !line.equals(":EXIT")) {
            		counter[2]++; // counts lines
-	        	counter[0] += line.length(); // counts characters
+	        	  counter[0] += line.length(); // counts characters
 
            		Scanner s = new Scanner(line);
-    	        while(s.hasNext()) {
+    	        while (s.hasNext()) {
     	        	s.next(); // moves pointer one ahead
     	        	counter[1]++; // counts words
     	        }
