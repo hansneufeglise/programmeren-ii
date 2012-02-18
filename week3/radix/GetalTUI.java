@@ -13,7 +13,7 @@ import java.util.*;
  * @author Rieks op den Akker, Arend Rensink en Theo Ruys
  * @version 2005.02.13
  */
-public class GetalTUI {
+public class GetalTUI implements Observer {
     
     /** Lijst met commando's van deze TUI. */
     private final List<Commando> commandos;
@@ -29,6 +29,7 @@ public class GetalTUI {
 
     public GetalTUI() {
         getal = new Getal();
+        getal.addObserver(this);
         
         commandos = new ArrayList<Commando>();
         commandos.add(new ObserverCommando());
@@ -151,6 +152,11 @@ public class GetalTUI {
         }
         
         public void voerUit(String par1, String par2) {
+        	try {
+        		new GetalObserver(getal, Integer.parseInt(par1));
+        	} catch (NumberFormatException e) {
+        		out.println("Radix is te groot");
+        	}
         }
     }
 
@@ -188,4 +194,12 @@ public class GetalTUI {
             // doe niets - wordt afgehandeld in voerCommandoUit
         }
     }
+
+    /**
+     * Geeft na update Getal visuele terugkoppeling
+     */
+	@Override
+	public void update(Observable o, Object obj) {
+		System.out.println("Getal is veranderd in " + obj);		
+	}
 } 
