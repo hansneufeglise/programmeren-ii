@@ -15,7 +15,9 @@ public class GetalObserver extends JFrame implements Observer {
 
 	public GetalObserver(Getal g, int r) {
 		if (r > Character.MAX_RADIX) {
-			throw new NumberFormatException();
+			throw new NumberFormatException("Radix is te groot");
+		} else if (r < 1) {
+			throw new NumberFormatException("Radix is te klein");
 		}
 		getal = g;
 		radix = r;
@@ -37,8 +39,9 @@ public class GetalObserver extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object obj) {
-		String label = obj.toString() + " is in radix " + radix + ": ";
-		label += NaarRadix.naarRadix(Integer.parseInt(obj.toString()), radix);
+		int getal = Integer.parseInt(obj.toString());
+		String label = getal + " is in radix " + radix + ": ";
+		label += Integer.toString(getal, radix);
 		
 		l.setText(label);
 	}

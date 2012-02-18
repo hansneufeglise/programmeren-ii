@@ -155,7 +155,9 @@ public class GetalTUI implements Observer {
         	try {
         		new GetalObserver(getal, Integer.parseInt(par1));
         	} catch (NumberFormatException e) {
-        		out.println("Radix is te groot");
+        		out.println(e.getMessage());
+        	} catch (IllegalArgumentException e) {
+        		out.println(e.getMessage());
         	}
         }
     }
@@ -171,7 +173,10 @@ public class GetalTUI implements Observer {
                 getal.setWaarde(w);
             } catch (NumberFormatException exp) {
                 out.println("Error: " + par1 + " is geen getal");
-            }
+            } catch (IllegalArgumentException e) {
+        		out.println(e.getMessage());
+        	}
+
         }            
     }
 
