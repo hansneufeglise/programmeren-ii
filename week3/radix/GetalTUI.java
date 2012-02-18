@@ -176,7 +176,6 @@ public class GetalTUI implements Observer {
             } catch (IllegalArgumentException e) {
         		out.println(e.getMessage());
         	}
-
         }            
     }
 

@@ -1,6 +1,7 @@
 package week3.radix;
 
 import java.awt.GridLayout;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,7 +17,7 @@ public class GetalObserver extends JFrame implements Observer {
 	public GetalObserver(Getal g, int r) {
 		if (r > Character.MAX_RADIX) {
 			throw new NumberFormatException("Radix is te groot");
-		} else if (r < 1) {
+		} else if (r < Character.MIN_RADIX) {
 			throw new NumberFormatException("Radix is te klein");
 		}
 		getal = g;
