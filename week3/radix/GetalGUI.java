@@ -17,6 +17,7 @@ public class GetalGUI extends JFrame implements Observer {
 	private JTextField getalField, radixField;
 
 	public GetalGUI() {
+		super("Getalconverteerder");
 		this.setLayout(new GridLayout(3,2));
 		
 		getal = new Getal();
@@ -68,9 +69,7 @@ public class GetalGUI extends JFrame implements Observer {
 
 		this.add(l);
 
-
 		this.setSize(400, 150);
-		this.setTitle("Getalconverteerder");
 		this.setVisible(true);
 	}
 	

@@ -8,16 +8,21 @@ public class StemFrame extends Frame {
 	private final String DEFAULT_LABEL = "Maak uw keuze:";
 
 	private final String[] partijen = {DEFAULT_CHOICE, "Veel Vrijheid en niets Doen", "Partij van de Aardbei", "Speciale Partij", "Doet 67", "Can Do All"};
-	
+
+	Label l;
+	Button b;
+	Choice c;
+
 	public StemFrame() {
+		super("Stemmachine");
 		setLayout(new GridLayout(0,1));
 
-		final Label l = new Label(DEFAULT_LABEL);
+		l = new Label(DEFAULT_LABEL);
 
-		final Button b = new Button("OK");
+		b = new Button("OK");
 		b.setEnabled(false);
 
-		final Choice c = new Choice();
+		c = new Choice();
 		for (String partij: partijen) {
 			c.add(partij);
 		}
@@ -34,14 +39,13 @@ public class StemFrame extends Frame {
 		);
 
 		b.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						b.setEnabled(false);
-						l.setText(DEFAULT_LABEL);
-						c.select(0);
-					}
-
+			new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					b.setEnabled(false);
+					l.setText(DEFAULT_LABEL);
+					c.select(0);
 				}
+			}
 		);
 		
 		this.add(l);
@@ -49,7 +53,6 @@ public class StemFrame extends Frame {
 		this.add(b);
 		
 		this.setSize(200, 150);
-		this.setTitle("Stemmachine");
 		this.setVisible(true);
 	}
 	

@@ -15,11 +15,14 @@ public class GetalObserver extends JFrame implements Observer {
 	
 
 	public GetalObserver(Getal g, int r) {
+		super("Getalconverteerder");
+
 		if (r > Character.MAX_RADIX) {
 			throw new NumberFormatException("Radix is te groot");
 		} else if (r < Character.MIN_RADIX) {
 			throw new NumberFormatException("Radix is te klein");
 		}
+
 		getal = g;
 		radix = r;
 
@@ -30,7 +33,6 @@ public class GetalObserver extends JFrame implements Observer {
 		this.add(l);
 
 		this.setSize(200, 100);
-		this.setTitle("Getalconverteerder");
 		this.setVisible(true);
 
 		// set initial value
