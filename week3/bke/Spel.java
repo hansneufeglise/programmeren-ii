@@ -10,7 +10,7 @@ import java.util.Observable;
  * @author  Theo Ruys en Arend Rensink
  * @version 2002.01.22
  */
-public class Spel extends Observable{
+public class Spel extends Observable {
 
     // -- Instance variables -----------------------------------------
 
@@ -61,8 +61,7 @@ public class Spel extends Observable{
      */
     public void reset() {
         huidig = Mark.XX;
-        bord.reset();
-        
+        bord.reset();        
         this.setChanged();
         this.notifyObservers(this);
     }
@@ -70,14 +69,14 @@ public class Spel extends Observable{
     /**
      * Zet de huidige mark in het vakje i. 
      * Geef de beurt aan de andere Mark.
-     * @require  0<=i && i <Bord.DIM*Bord.DIM && this.getBord().isLeegVakje(i)
+     * @require  0 <= i && i < Bord.DIM*Bord.DIM && this.getBord().isLeegVakje(i)
      * @param    i de index waar de mark zal worden gezet.
      */
     public void doeZet(int i) {
-        bord.setVakje(i, huidig);
-        
+        bord.setVakje(i, huidig);        
         this.setChanged();
         this.notifyObservers(this);
         huidig = huidig.other();
     }
+
 }

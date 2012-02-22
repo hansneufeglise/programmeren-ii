@@ -108,23 +108,25 @@ public class BKEView extends JFrame implements Observer {
 		new BKEView(s);
 	}
 	
-	public class BKEController implements ActionListener {
-		Spel spel;
-	
-		public BKEController(Spel s) {
-			spel = s;
-		}
+	// Controller als inner class
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			int button = Integer.parseInt(e.getActionCommand());
-			System.out.println(button);
-			
-			if (button < (Bord.DIM * Bord.DIM)) {
-				spel.doeZet(button);
-			} else {
-				spel.reset();
-			}
-		}
-	}
+  public class BKEController implements ActionListener {
+  	Spel spel;
+
+  	public BKEController(Spel s) {
+  		spel = s;
+  	}
+
+  	@Override
+  	public void actionPerformed(ActionEvent e) {
+  		int button = Integer.parseInt(e.getActionCommand());
+  		System.out.println(button);
+
+  		if (button < (Bord.DIM * Bord.DIM)) {
+  			spel.doeZet(button);
+  		} else {
+  			spel.reset();
+  		}
+  	}
+  }
 }
