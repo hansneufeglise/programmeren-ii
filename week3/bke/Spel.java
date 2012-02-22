@@ -1,5 +1,7 @@
 package week3.bke;
 
+import java.util.Observable;
+
 
 /**
  * P2 week5.
@@ -8,7 +10,7 @@ package week3.bke;
  * @author  Theo Ruys en Arend Rensink
  * @version 2002.01.22
  */
-public class Spel {
+public class Spel extends Observable{
 
     // -- Instance variables -----------------------------------------
 
@@ -60,6 +62,9 @@ public class Spel {
     public void reset() {
         huidig = Mark.XX;
         bord.reset();
+        
+        this.setChanged();
+        this.notifyObservers(this);
     }
 
     /**
@@ -70,8 +75,9 @@ public class Spel {
      */
     public void doeZet(int i) {
         bord.setVakje(i, huidig);
+        
+        this.setChanged();
+        this.notifyObservers(this);
         huidig = huidig.other();
     }
-} 
-
-
+}
