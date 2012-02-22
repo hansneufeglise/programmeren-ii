@@ -1,8 +1,7 @@
 package week3.bke;
 
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +18,7 @@ public class BKEView extends JFrame implements Observer {
 	public BKEView(Spel s) {
 		super("Boter, kaas en eieren");
 		s.addObserver(this);
-		
+
 		Container cp = this.getContentPane();
 		
 		p = new JPanel();
@@ -40,32 +39,19 @@ public class BKEView extends JFrame implements Observer {
 
 		JPanel controlPanel = new JPanel();
 
-		// spacer
-		controlPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
-		l = new JLabel();
-		l.setAlignmentX(Component.CENTER_ALIGNMENT);
+		l = new JLabel("Er is iemand aan de beurt.");
 		controlPanel.add(l);
-
-		// spacer
-		controlPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		
 		b = new JButton("Nog een keer?");
-		b.setAlignmentX(Component.CENTER_ALIGNMENT);
 		b.setEnabled(false);
-		b.addActionListener(new BKEController(s));
-		b.setActionCommand("" + (Bord.DIM * Bord.DIM));
 		controlPanel.add(b);
 
-		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.PAGE_AXIS));
+		controlPanel.setLayout(new FlowLayout());
 		cp.add(controlPanel);
 
-		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
-		this.setResizable(false);
+		this.setLayout(new GridLayout(0,1));
 		this.setSize(300,300);
 		this.setVisible(true);
-
-		this.update(null, s); // set-up initial state
 	}
 	
 	@Override
@@ -76,8 +62,6 @@ public class BKEView extends JFrame implements Observer {
 			lb.get(i).setText(b.getVakje(i).toString());
 			if (!b.isLeegVakje(i)) {
 				lb.get(i).setEnabled(false);
-			} else {
-				lb.get(i).setEnabled(true);
 			}
 		}
 		
@@ -97,10 +81,10 @@ public class BKEView extends JFrame implements Observer {
 				 lb.get(i).setEnabled(false);
 			}
 			
-			this.b.setEnabled(true); // enable 'again' button
+			this.b.setEnabled(true);
 		} else {
-			l.setText(s.getHuidig() + " is aan de beurt");
-		}	
+			l.setText(s.getHuidig().other() + " is aan de beurt");
+		}
 	}
 
 	public static void main(String[] args) {
@@ -117,14 +101,8 @@ public class BKEView extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int button = Integer.parseInt(e.getActionCommand());
-			System.out.println(button);
-			
-			if (button < (Bord.DIM * Bord.DIM)) {
-				spel.doeZet(button);
-			} else {
-				spel.reset();
-			}
+			int zet = Integer.parseInt(e.getActionCommand());
+			spel.doeZet(zet);
 		}
 	}
 }
