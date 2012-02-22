@@ -17,7 +17,7 @@ public class Getal extends Observable {
 
     /**
      * Construeert een <code>Getal</code> met beginwaarde 0.
-     * @enture this.getWaarde() == 0
+     * @ensure this.getWaarde() == 0
      */
     public Getal() {
         this(0);
@@ -46,7 +46,6 @@ public class Getal extends Observable {
      */
     protected void setWaarde(int waarde){
         this.waarde = waarde;
-
         this.setChanged();
         this.notifyObservers(waarde);
     }

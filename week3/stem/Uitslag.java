@@ -45,6 +45,8 @@ public class Uitslag extends Observable {
     public void voegPartijToe(String partij) {
         if (! stemmen.containsKey(partij)) {
             stemmen.put(partij, 0);
+            this.setChanged();
+            this.notifyObservers(partij);
         }
     }
 
@@ -58,7 +60,9 @@ public class Uitslag extends Observable {
     public void stem(String partij) {
         if (stemmen.containsKey(partij)) {
             int aantal = stemmen.get(partij);
-            stemmen.put(partij, aantal+1);
+            stemmen.put(partij, aantal + 1);
+            this.setChanged();
+            this.notifyObservers(partij);
         }
     }
 }

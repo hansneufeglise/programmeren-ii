@@ -3,7 +3,9 @@ package week3.stem;
 import java.awt.*;
 import java.awt.event.*;
 
-public class StemFrame extends Frame {
+import java.util.*;
+
+public class StemFrame extends Frame implements Observer {
 	private final String DEFAULT_CHOICE = "(kies een partij)";
 	private final String DEFAULT_LABEL = "Maak uw keuze:";
 
@@ -13,8 +15,11 @@ public class StemFrame extends Frame {
 	Button b;
 	Choice c;
 
-	public StemFrame() {
+	public StemFrame(Uitslag uitslag) {
 		super("Stemmachine");
+		
+		uitslag.addObserver(this);
+				
 		setLayout(new GridLayout(0,1));
 
 		l = new Label(DEFAULT_LABEL);
@@ -23,10 +28,14 @@ public class StemFrame extends Frame {
 		b.setEnabled(false);
 
 		c = new Choice();
-		for (String partij: partijen) {
-			c.add(partij);
-		}
 
+	  for (String partij : partijen) {
+	    if (!partij.equals(DEFAULT_CHOICE)) {
+			  c.add(partij);
+			  uitslag.voegPartijToe(partij);
+		  }
+		}
+		
 		c.addItemListener(
 			new ItemListener() {
 				public void itemStateChanged(ItemEvent e) {
@@ -37,13 +46,25 @@ public class StemFrame extends Frame {
 				}
 			}
 		);
+		
+		final Uitslag u = uitslag; // *cough cough*
 
 		b.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+				  // Stem uitvoeren
+					u.stem(c.getSelectedItem());
 					b.setEnabled(false);
 					l.setText(DEFAULT_LABEL);
 					c.select(0);
+				}
+			}
+		);
+		
+		this.addWindowListener(
+		  new WindowAdapter() {
+			  public void windowClosing(WindowEvent e) {
+				  System.exit(0);
 				}
 			}
 		);
@@ -52,17 +73,20 @@ public class StemFrame extends Frame {
 		this.add(c);
 		this.add(b);
 		
+		this.update(uitslag, null);
+		
 		this.setSize(200, 150);
 		this.setVisible(true);
 	}
 	
-	public static void main(String args[]) {
-		new StemFrame().addWindowListener(
-				new WindowAdapter() {
-					public void windowClosing(WindowEvent e) {
-						System.exit(0);
-					}
-				}
-		);
+	public void update(Observable obj, Object arg) {	  
+	  Uitslag uitslag = (Uitslag)obj;
+	  c.removeAll();
+	  
+	  // Nieuwe partijen toevoegen
+	  for (String partij : uitslag.getPartijen()) {
+      c.add(partij);	    
+	  }
 	}
+
 }
