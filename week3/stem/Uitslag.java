@@ -31,7 +31,9 @@ public class Uitslag extends Observable {
 
     /** Levert de bestaande partijen op als verzameling String-objecten. */
     public Set<String> getPartijen() {
-        return stemmen.keySet();
+      // Alfabetisch sorteren op key
+      SortedSet<String> sortedSet = new TreeSet<String>(stemmen.keySet());
+      return sortedSet;
     }
 
     // ---- Commando's -----------------------------------------
