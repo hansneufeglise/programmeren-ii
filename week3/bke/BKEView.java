@@ -62,6 +62,9 @@ public class BKEView extends JFrame implements Observer {
 
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
 		this.setResizable(false);
+		
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 		this.setSize(300,300);
 		this.setVisible(true);
 
@@ -99,6 +102,7 @@ public class BKEView extends JFrame implements Observer {
 			
 			this.b.setEnabled(true); // enable 'again' button
 		} else {
+		  this.b.setEnabled(false);
 			l.setText(s.getHuidig() + " is aan de beurt");
 		}	
 	}
@@ -120,7 +124,6 @@ public class BKEView extends JFrame implements Observer {
   	@Override
   	public void actionPerformed(ActionEvent e) {
   		int button = Integer.parseInt(e.getActionCommand());
-  		System.out.println(button);
 
   		if (button < (Bord.DIM * Bord.DIM)) {
   			spel.doeZet(button);

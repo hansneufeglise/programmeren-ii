@@ -30,7 +30,7 @@ public class UitslagJFrame extends JFrame implements Observer {
 	public void update(Observable obj, Object arg) {
 	  // Cast als Uitslag-object
 	  Uitslag uitslag = (Uitslag)obj;
-	
+
 		// TextArea leegmaken
 		u.setText("");
 	

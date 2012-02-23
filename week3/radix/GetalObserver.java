@@ -28,7 +28,7 @@ public class GetalObserver extends JFrame implements Observer {
 
 		getal.addObserver(this);
 
-		setLayout(new GridLayout(0,1));
+		setLayout(new GridLayout(0, 1));
 
 		this.add(l);
 
