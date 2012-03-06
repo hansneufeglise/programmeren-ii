@@ -17,18 +17,19 @@ public class IntConsumer extends Thread {
     public void run() {
         int val;
         do {
-            // sleep for a random interval
+            // Sleep for a random interval
             try {
-                Thread.sleep( (int) ( Math.random() * 3000 ) );
-            } catch( InterruptedException e ) {
+                Thread.sleep( (int) (Math.random() * 3000) );
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             val = cell.getValue();
-            System.out.println(getName()+": "+val+" gezien");
-        } while ( val != -1 );
+            System.out.println(getName() + ": " + val + " gezien");
+            
+        } while (val != -1);
 
-        System.out.println(getName() + ": einde" );
+        System.out.println(getName() + ": einde");
     }
 }
 

@@ -11,13 +11,12 @@ package week4.threads;
  * @version january 2002
  */
 public class ProdCons {
-    public static void main( String args[] )
-    {
-        IntCell cell = new UnsynchronizedIntCell();
-        Thread prod1 = new IntProducer( 1, cell );
-        Thread prod2 = new IntProducer( 2, cell );
-        Thread cons1 = new IntConsumer( 1, cell );
-        Thread cons2 = new IntConsumer( 2, cell );
+    public static void main(String args[]) {
+        IntCell cell = new SynchronizedIntCell();
+        Thread prod1 = new IntProducer(1, cell);
+        Thread prod2 = new IntProducer(2, cell);
+        Thread cons1 = new IntConsumer(1, cell);
+        Thread cons2 = new IntConsumer(2, cell);
 
         prod1.start();
         prod2.start();
