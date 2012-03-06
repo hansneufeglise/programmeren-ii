@@ -19,6 +19,7 @@ public class BallPanel extends JPanel {
 
     public BallPanel(){
         balls = new java.util.ArrayList<Ball>();
+        (new AnimatieThread(this)).start();
     }
 
     public void animate() {
@@ -65,5 +66,16 @@ public class BallPanel extends JPanel {
         super.paintComponent(g);
         for (Ball b: balls) 
             b.draw(g);
+    }
+    
+    private class AnimatieThread extends Thread {
+    	BallPanel bp;
+    	public AnimatieThread(BallPanel bp) {
+    		this.bp = bp;
+    	}
+
+    	public void run() {
+    		bp.animate();
+    	}
     }
 }

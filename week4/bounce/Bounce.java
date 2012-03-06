@@ -27,7 +27,6 @@ public class Bounce extends JFrame {
       start.addActionListener(new ActionListener(){
               public void actionPerformed(ActionEvent evt){
                   ballPanel.addNewBall();
-                  ballPanel.animate();
               }
       });
       getContentPane().add("South", controlPanel);
