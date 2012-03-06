@@ -4,6 +4,7 @@ import java.util.*;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 /**
@@ -13,23 +14,19 @@ import javax.swing.*;
  * @author  Rieks op den Akker, Arend Rensink en Theo Ruys
  * @version 2005.02.22
  */
-public class BallPanel extends JPanel {
+public class BallPanel extends JPanel implements ActionListener {
     private List<Ball>  	balls;    // @invariant balls != null
     private javax.swing.Timer   timer;    // de timer die tikt
 
     public BallPanel(){
         balls = new java.util.ArrayList<Ball>();
-        (new AnimatieThread(this)).start();
+        timer = new javax.swing.Timer(5, this);
+        timer.start();
     }
 
     public void animate() {
-        try {
-            while(true) {
-                Thread.sleep(5);
-                moveBalls();
-                repaint();
-            }
-        } catch (InterruptedException exc) {}
+        moveBalls();
+        repaint();
     }
 
     /** Add a new ball to the ball list and start the timer if not yet running */
@@ -67,15 +64,9 @@ public class BallPanel extends JPanel {
         for (Ball b: balls) 
             b.draw(g);
     }
-    
-    private class AnimatieThread extends Thread {
-    	BallPanel bp;
-    	public AnimatieThread(BallPanel bp) {
-    		this.bp = bp;
-    	}
 
-    	public void run() {
-    		bp.animate();
-    	}
-    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.animate();
+	}
 }
