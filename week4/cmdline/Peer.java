@@ -16,6 +16,7 @@ public class Peer implements Runnable {
     protected Socket            sock;
     protected BufferedReader    in;
     protected BufferedWriter    out;
+    private static final String EXIT = "exit";
 
     /**
      * Constructor. Construeert een Peer-object met de gegeven naam
@@ -24,9 +25,11 @@ public class Peer implements Runnable {
      * @param   naam naam van dit Peer-proces
      * @param   sock Socket van dit Peer-proces
      */
-    public Peer(String name, Socket sock) throws IOException 
-    {
-        // BODY NOG TOE TE VOEGEN
+    public Peer(String name, Socket sock) throws IOException {
+        this.name   = name;
+        this.sock   = sock;
+        this.in     = new BufferedReader(new InputStreamReader(System.in));
+        this.out    = new BufferedWriter(new OutputStreamWriter(System.out));
     }
 
     /**
@@ -34,7 +37,15 @@ public class Peer implements Runnable {
      * schrijft deze karakters naar de standard output. 
      */
     public void run() {
-        // BODY NOG TOE TE VOEGEN
+        String line;
+        try {
+            BufferedReader socketIn = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
+            while ((line = socketIn.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     
@@ -44,7 +55,19 @@ public class Peer implements Runnable {
      * ingetypt eindigt te methode.
      */
     public void handleTerminalInput() {
-        // BODY NOG TOE TE VOEGEN
+        String line;
+        try {
+            PrintWriter socketOut = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
+            while ((line = in.readLine()) != null) {
+                if (line.equals(this.EXIT)) {
+                    shutDown();
+                } else {              
+                    socketOut.println(line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
@@ -52,7 +75,13 @@ public class Peer implements Runnable {
      * ook de Socket zelf wordt afgesloten.
      */
     public void shutDown() {
-        // BODY NOG TOE TE VOEGEN
+        try {
+            in.close();
+            out.close();
+            sock.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /** Levert de naam van dit Peer-object. */

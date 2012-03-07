@@ -16,39 +16,54 @@ public class Client {
 
     /** Start een Client-applicatie op. */
     public static void main(String[] args) {
-        if (args.length != 3) {
+        
+        // Declareer variabelen
+        InetAddress address;
+        Socket socket;
+        String name;        
+        int port;
+        
+        // Valideer parameters
+        if (args.length != 3 || !args[0].matches(Format.NAME) || !args[1].matches(Format.ADDRESS) || !args[2].matches(Format.PORT)) {
             System.out.println(USAGE);
             System.exit(0);
         }
     
-        String      name = args[0];
-        InetAddress addr = null;
-        int         port = 0;
-        Socket      sock = null;
-
-        // Nog toe te voegen: controle en parsen van de 
-        // .. argumentlijst args. Daarna hebben name, addr 
-        // .. en port een gedefinieerde waarde.
-
-        // try to open a Socket to the server
+        // Probeer hostname/ip te resolven en socket te starten
         try {
-            sock = new Socket(addr, port);
+            name    = args[0];
+            address = InetAddress.getByName(args[1]);
+            port    = Integer.parseInt(args[2]);
+            socket  = new Socket(address, port);
+            
+            // Socket proberen te openen op de server
+            try {
+                socket = new Socket(address, port);
+                System.out.println("Client socket gestart op " + socket.getLocalSocketAddress());
+            } catch (IOException e) {
+                System.out.println("Kon geen socket maken op port " + port + " en adres " + address);
+            }
+
+            // Communicatie in twee richtingen starten
+            try {
+                Peer client = new Peer(name, socket);
+                Thread streamInputHandler = new Thread(client);
+                streamInputHandler.start();
+                client.handleTerminalInput();
+                client.shutDown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        } catch (UnknownHostException e) {
+            System.out.println(e.getMessage());
         } catch (IOException e) {
-            System.out.println("ERROR: could not create a socket on " +
-                                addr + " and port " + port);
+            System.out.println(e.getMessage());
         }
- 
-        // create Peer object and start the two-way communication
-        try {
-            Peer client = new Peer(name, sock);
-            Thread streamInputHandler = new Thread(client);
-            streamInputHandler.start();
-            client.handleTerminalInput();
-            client.shutDown();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
+
+        
     }
 
-} // end of class Client
+}
 
