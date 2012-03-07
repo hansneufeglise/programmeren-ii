@@ -15,9 +15,9 @@ public class Peer implements Runnable {
     protected String            name;
     protected Socket            sock;
     protected BufferedReader    in;
-    protected BufferedWriter    out;
+    protected PrintWriter       out;
     private static final String EXIT = "exit";
-
+    
     /**
      * Constructor. Construeert een Peer-object met de gegeven naam
      * en de meegegeven sock. Initialiseert de input- en outputstreams.
@@ -28,8 +28,8 @@ public class Peer implements Runnable {
     public Peer(String name, Socket sock) throws IOException {
         this.name   = name;
         this.sock   = sock;
-        this.in     = new BufferedReader(new InputStreamReader(System.in));
-        this.out    = new BufferedWriter(new OutputStreamWriter(System.out));
+        this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
+        this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
     }
 
     /**
@@ -39,9 +39,11 @@ public class Peer implements Runnable {
     public void run() {
         String line;
         try {
-            BufferedReader socketIn = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
-            while ((line = socketIn.readLine()) != null) {
-                System.out.println(line);
+            while (true) {
+                if (this.in.ready()) {
+                    line = in.readLine();
+                    System.out.println(line);
+                }
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -56,17 +58,14 @@ public class Peer implements Runnable {
      */
     public void handleTerminalInput() {
         String line;
-        try {
-            PrintWriter socketOut = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
-            while ((line = in.readLine()) != null) {
-                if (line.equals(this.EXIT)) {
-                    shutDown();
-                } else {              
-                    socketOut.println(line);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+        while (true) {
+            line = readString("");                
+            if (line.equals(this.EXIT)) {
+                shutDown();                
+            } else {
+                out.println(this.getName() + " zegt: " + line);
+                out.flush();
+            }                
         }
     }
 
@@ -78,10 +77,11 @@ public class Peer implements Runnable {
         try {
             in.close();
             out.close();
-            sock.close();
+            sock.close();            
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+        System.exit(0);
     }
 
     /** Levert de naam van dit Peer-object. */
@@ -94,8 +94,7 @@ public class Peer implements Runnable {
         System.out.print(tekst);
         String antw = null;
         try {
-            BufferedReader in = 
-                new BufferedReader(new InputStreamReader(System.in));            
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));            
             antw = in.readLine();
         } catch (IOException e) {
         }

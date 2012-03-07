@@ -20,48 +20,40 @@ public class Server {
             System.out.println(USAGE);
             System.exit(0);
         }
-
+        
         String name = args[0];
         int port = Integer.parseInt(args[1]);
-
+        ServerSocket serverSocket = null;
+        
+        // Server starten
         try {
-            // Probeer een nieuwe socket te starten op de server            
-            ServerSocket serverSocket = new ServerSocket(port);            
-            System.out.println("Server gestart op " + serverSocket.getLocalSocketAddress());
-            int clientCount = 1;
+            serverSocket = new ServerSocket(port);
+            System.out.println("Server gestart op " + serverSocket.getLocalSocketAddress());                        
+        } catch (IOException e) {
+            System.err.println("Kon server niet starten op poort: " + port);
+            System.exit(1);
+        }
+ 
+        // Verbindingen van clients toestaan                
+        Socket clientSocket = null;
+        try {
+            int clientCount = 0;
             while (true) {
-                // Verbindingen van clients toestaan                
-                Socket clientSocket = serverSocket.accept();                
-                System.out.println("Client #" + clientCount + " is verbonden.");      
-                clientCount++;
+                clientSocket = serverSocket.accept();                
+                System.out.println("Client #" + (++clientCount) + " is verbonden.");
+                // Communicatie in twee richtingen starten            
                 Peer client = new Peer(name, clientSocket);
                 Thread streamInputHandler = new Thread(client);
                 streamInputHandler.start();
                 client.handleTerminalInput();
-                 // shutdown !?
-                client.shutDown();
-            }
+                client.shutDown();                
+            }            
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Kon verbinding met client niet openen.");
+            System.exit(1);
         }
 
-        /*
-        De klasse Server is een klasse met alleen een methode main. Net als bij de klasse Client
-        worden de Socket sock van de server en een Peer-object en in deze methode main gecon-
-        strueerd. De Server applicatie wordt als volgt opgestart:
-            java week4.cmdline.Server <name> <port>.
-        Anders dan bij de klasse Client moet er eerst een ServerSocket object gecree ̈erd
-        worden en blijft de Server wachten totdat een Client verbinding zoekt met de Server over
-        de port.
-        */
 
-        // Nog toe te voegen: controle en parsen van de 
-        // .. argumentlijst args. Daarna hebben name en port 
-        // .. een gedefinieerde waarde. 
-        // .. Daarna wachten tot een Client zich aanmeldt.
-        // .. Vervolgens Peer-object creeeren en zorgen dat
-        // .. de input op de Terminal goed wordt afgehandeld.
-  
       }
 
 }
