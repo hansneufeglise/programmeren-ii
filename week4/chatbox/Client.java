@@ -17,15 +17,30 @@ public class Client extends Thread {
     private MessageUI       mui;
     private Socket          sock;
     private BufferedReader  in;
-    private BufferedWriter  out;
+    private PrintWriter     out;
 
     /**
      * Construeert een Client-object en probeert een socketverbinding
      * met een Server op te starten.
      */
-    public Client(String name, InetAddress host, int port, MessageUI mui) 
-                                                 throws IOException {
-        // BODY NOG TOE TE VOEGEN
+    public Client(String name, InetAddress host, int port, MessageUI mui) throws IOException {
+        this.mui = mui;
+        
+        // Probeer socketverbinding met server te starten
+        try {
+            this.sock = new Socket(host, port);
+            System.out.println("Client socket gestart op " + socket.getLocalSocketAddress());            
+        } catch (IOException e) {
+            System.out.println("Kon geen socket maken op port " + port + " en adres " + address);
+            System.exit(1);
+        }
+        
+        // ...
+        this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
+        this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
+        
+        // Eerste wat de client doet is zijn naam verzenden:
+        sendMessage(this.name);
     }
 
     /**

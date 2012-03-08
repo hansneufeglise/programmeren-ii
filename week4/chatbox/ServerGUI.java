@@ -11,8 +11,7 @@ import java.net.*;
  * @author  Theo Ruys
  * @version 2005.02.21
  */
-public class ServerGUI extends JFrame 
-                       implements ActionListener, MessageUI {
+public class ServerGUI extends JFrame implements ActionListener, MessageUI {
 
     private JButton     bConnect;
     private JTextField  tfPort;
@@ -39,7 +38,7 @@ public class ServerGUI extends JFrame
 
     /** Bouwt de daadwerkelijke GUI. */
     public void buildGUI() {
-        setSize(400,400);
+        setSize(440, 400);
 
         // Panel p1 - Listen
 
@@ -58,7 +57,7 @@ public class ServerGUI extends JFrame
         pp.add(lbPort);
         pp.add(tfPort);
 
-        bConnect = new JButton("Start Listening");
+        bConnect = new JButton("Launch");
         bConnect.addActionListener(this);
 
         p1.add(pp, BorderLayout.WEST);
@@ -70,7 +69,7 @@ public class ServerGUI extends JFrame
         p2.setLayout(new BorderLayout());
 
         JLabel lbMessages = new JLabel("Messages:");
-        taMessages = new JTextArea("", 15, 50);
+        taMessages = new JTextArea("", 15, 34);
         taMessages.setEditable(false);
         p2.add(lbMessages);
         p2.add(taMessages, BorderLayout.SOUTH);
