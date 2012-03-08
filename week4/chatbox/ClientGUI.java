@@ -120,7 +120,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
     /** Voegt een bericht toe aan de TextArea op het frame. */
     public void addMessage(String msg) {
-        // BODY NOG TOE TE VOEGEN
+        taMessages.append(msg + "\n");
     }
 
     /** Start een ClientGUI applicatie op. */

@@ -25,6 +25,7 @@ public class Client extends Thread {
      */
     public Client(String name, InetAddress host, int port, MessageUI mui) throws IOException {
         this.mui = mui;
+        this.clientName = name;
         
         // Probeer socketverbinding met server te starten
         try {
@@ -50,18 +51,33 @@ public class Client extends Thread {
      * socketverbinding.
      */
     public void run() {
-        // BODY NOG TOE TE VOEGEN
+        try {
+            while (true) {
+                if (this.in.ready()) {
+                    mui.addMessage(in.readLine());
+                }
+            }
+        } catch (IOException e) {
+            shutdown();
+        }
     }
 
     /** Stuurt een bericht over de socketverbinding naar de ClientHandler. */
     public void sendMessage(String msg) {
-        // BODY NOG TOE TE VOEGEN
+        out.println(msg);
     }
 
     /** Sluit de socketverbinding van deze client. */
     public void shutdown() {
         mui.addMessage("Closing socket connection...");
-        // REST NOG TOE TE VOEGEN
+
+        try {
+            sock.shutdownInput();
+            sock.shutdownOutput();
+            sock.close();   
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /** Levert de naam van de gebruiker van deze Client. */

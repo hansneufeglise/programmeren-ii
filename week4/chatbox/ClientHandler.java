@@ -24,7 +24,8 @@ public class ClientHandler extends Thread {
      * @require server != null && sock != null
      */
     public ClientHandler(Server server, Socket sock) throws IOException {
-        // BODY NOG TOE TE VOEGEN
+        this.server = server;
+        this.sock = sock;
     }
 
     /**
@@ -59,7 +60,7 @@ public class ClientHandler extends Thread {
      * socketverbinding verbroken is en roept shutdown() aan.
      */
     public void sendMessage(String msg) {
-        // BODY NOG TOE TE VOEGEN
+        server.
     }
 
     /**

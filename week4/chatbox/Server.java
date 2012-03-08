@@ -16,10 +16,21 @@ public class Server extends Thread {
     private int                        port;
     private MessageUI                  mui;
     private Collection<ClientHandler>  threads;
+    private ServerSocket server;
 
     /** Construeert een nieuw Server-object. */
     public Server(int port, MessageUI mui) {
-        // BODY NOG TOE TE VOEGEN
+        // Server starten
+        try {
+            serverSocket = new ServerSocket(port);
+            System.out.println("Server gestart op " + serverSocket.getLocalSocketAddress());                        
+        } catch (IOException e) {
+            System.err.println("Kon server niet starten op poort: " + port);
+            System.exit(1);
+        }
+        
+        this.mui = mui;
+        threads = new Collection<ClientHandler>();
     }
 
     /**
@@ -29,7 +40,22 @@ public class Server extends Thread {
      * communicatie met de Client afhandelt.
      */
     public void run() {
-        // BODY NOG TOE TE VOEGEN
+        Socket clientSocket = null;
+        try {
+            while (true) {
+                clientSocket = serverSocket.accept();
+                System.out.println("Client #" + (++clientCount) + " is verbonden.");
+                // Communicatie in twee richtingen starten            
+                Peer client = new Peer(name, clientSocket);
+                Thread streamInputHandler = new Thread(client);
+                streamInputHandler.start();
+                client.handleTerminalInput();
+                client.shutDown();
+            }            
+        } catch (IOException e) {
+            System.err.println("Kon verbinding met client niet openen.");
+            System.exit(1);
+        }
     }
 
     /**
