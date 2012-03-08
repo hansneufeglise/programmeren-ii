@@ -16,7 +16,7 @@ public class SynchronizedIntCell implements IntCell {
         }
         this.value = value;
         beschikbaar = true;
-        notifyAll();        
+        notifyAll();
     }
 
     public synchronized int getValue() {
@@ -25,7 +25,6 @@ public class SynchronizedIntCell implements IntCell {
             wait();
           } catch (InterruptedException e) { }
         }
-
         beschikbaar = false;
         notifyAll();
         return value;

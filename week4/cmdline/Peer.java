@@ -16,6 +16,7 @@ public class Peer implements Runnable {
     protected Socket            sock;
     protected BufferedReader    in;
     protected PrintWriter       out;
+    private boolean             run = true;
     private static final String EXIT = "exit";
     
     /**
@@ -58,14 +59,15 @@ public class Peer implements Runnable {
      */
     public void handleTerminalInput() {
         String line;
-        while (true) {
+        while (run) {
             line = readString("");                
             if (line.equals(this.EXIT)) {
-                shutDown();                
+                out.println(this.getName() + " is weggegaan.");                
+                run = false;     
             } else {
                 out.println(this.getName() + " zegt: " + line);
-                out.flush();
-            }                
+            }
+            out.flush();
         }
     }
 
@@ -75,9 +77,9 @@ public class Peer implements Runnable {
      */
     public void shutDown() {
         try {
-            in.close();
-            out.close();
-            sock.close();            
+            sock.shutdownInput();
+            sock.shutdownOutput();
+            sock.close();   
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
