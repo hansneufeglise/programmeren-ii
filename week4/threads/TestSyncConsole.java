@@ -16,12 +16,12 @@ public class TestSyncConsole extends Thread {
     }
 
     public void run() {
-      synchronized (System.out) {
+      synchronized (TestSyncConsole.class) {
         som();
       }
     }
     
-    private synchronized void som() {
+    private void som() {
       int eerste_getal = SyncConsole.readInt(this.getName() + ": eerste getal? ", this.ONGELDIG_FORMAAT);
       int tweede_getal = SyncConsole.readInt(this.getName() + ": tweede getal? ", this.ONGELDIG_FORMAAT);
       int som = eerste_getal + tweede_getal;            

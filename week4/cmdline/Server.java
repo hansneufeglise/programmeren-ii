@@ -46,7 +46,7 @@ public class Server {
                 Thread streamInputHandler = new Thread(client);
                 streamInputHandler.start();
                 client.handleTerminalInput();
-                client.shutDown();                
+                client.shutDown();
             }            
         } catch (IOException e) {
             System.err.println("Kon verbinding met client niet openen.");
