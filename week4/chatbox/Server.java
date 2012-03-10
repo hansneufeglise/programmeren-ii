@@ -22,15 +22,13 @@ public class Server extends Thread {
     public Server(int port, MessageUI mui) {
         // Server starten
         try {
-            serverSocket = new ServerSocket(port);
-            System.out.println("Server gestart op " + serverSocket.getLocalSocketAddress());                        
+        	server = new ServerSocket(port);
         } catch (IOException e) {
-            System.err.println("Kon server niet starten op poort: " + port);
-            System.exit(1);
+            mui.addMessage("Kon server niet starten op poort: " + port);
         }
         
         this.mui = mui;
-        threads = new Collection<ClientHandler>();
+        this.threads = new ArrayList<ClientHandler>();
     }
 
     /**
@@ -40,21 +38,18 @@ public class Server extends Thread {
      * communicatie met de Client afhandelt.
      */
     public void run() {
-        Socket clientSocket = null;
         try {
             while (true) {
-                clientSocket = serverSocket.accept();
-                System.out.println("Client #" + (++clientCount) + " is verbonden.");
-                // Communicatie in twee richtingen starten            
-                Peer client = new Peer(name, clientSocket);
-                Thread streamInputHandler = new Thread(client);
-                streamInputHandler.start();
-                client.handleTerminalInput();
-                client.shutDown();
+            	Socket clientSocket = server.accept();
+
+                // ClientHandler aanmaken die verkeer tussen server en client afhandelt            
+                ClientHandler ch = new ClientHandler(this, clientSocket);
+                addHandler(ch);
+                ch.announce();
+                ch.start();
             }            
         } catch (IOException e) {
-            System.err.println("Kon verbinding met client niet openen.");
-            System.exit(1);
+            mui.addMessage("Kon verbinding met client niet openen.");
         }
     }
 
@@ -64,7 +59,15 @@ public class Server extends Thread {
      * @param msg bericht dat verstuurd wordt
      */
     public void broadcast(String msg) {
-        // BODY NOG TOE TE VOEGEN
+        Iterator<ClientHandler> itr = this.threads.iterator();
+
+        // Output server
+        mui.addMessage(msg);
+        
+        // Output clients
+        while (itr.hasNext()) {
+        	itr.next().sendMessage(msg);
+        }
     }
 
     /**
@@ -72,7 +75,7 @@ public class Server extends Thread {
      * @param handler ClientHandler die wordt toegevoegd
      */
     public void addHandler(ClientHandler handler) {
-        // BODY NOG TOE TE VOEGEN
+        this.threads.add(handler);
     }
 
     /**
@@ -80,7 +83,7 @@ public class Server extends Thread {
      * @param handler ClientHandler die verwijderd wordt
      */
     public void removeHandler(ClientHandler handler) {
-        // BODY NOG TOE TE VOEGEN
+        this.threads.remove(handler);
     }
 
 } // end of class Server

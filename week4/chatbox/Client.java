@@ -28,20 +28,14 @@ public class Client extends Thread {
         this.clientName = name;
         
         // Probeer socketverbinding met server te starten
-        try {
-            this.sock = new Socket(host, port);
-            System.out.println("Client socket gestart op " + socket.getLocalSocketAddress());            
-        } catch (IOException e) {
-            System.out.println("Kon geen socket maken op port " + port + " en adres " + address);
-            System.exit(1);
-        }
+        this.sock = new Socket(host, port);
         
-        // ...
+        // I/O
         this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
         this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
         
         // Eerste wat de client doet is zijn naam verzenden:
-        sendMessage(this.name);
+        sendMessage(this.clientName);
     }
 
     /**
@@ -53,11 +47,9 @@ public class Client extends Thread {
     public void run() {
         try {
             while (true) {
-                if (this.in.ready()) {
-                    mui.addMessage(in.readLine());
-                }
+                mui.addMessage(in.readLine());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             shutdown();
         }
     }
@@ -65,6 +57,7 @@ public class Client extends Thread {
     /** Stuurt een bericht over de socketverbinding naar de ClientHandler. */
     public void sendMessage(String msg) {
         out.println(msg);
+        out.flush();
     }
 
     /** Sluit de socketverbinding van deze client. */
@@ -75,9 +68,7 @@ public class Client extends Thread {
             sock.shutdownInput();
             sock.shutdownOutput();
             sock.close();   
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        } catch (Exception e) { }
     }
 
     /** Levert de naam van de gebruiker van deze Client. */

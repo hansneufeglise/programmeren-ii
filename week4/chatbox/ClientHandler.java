@@ -15,7 +15,7 @@ public class ClientHandler extends Thread {
     private Server           server;
     private Socket           sock;
     private BufferedReader   in;
-    private BufferedWriter   out;
+    private PrintWriter      out;
     private String           clientName;
 
     /**
@@ -26,6 +26,10 @@ public class ClientHandler extends Thread {
     public ClientHandler(Server server, Socket sock) throws IOException {
         this.server = server;
         this.sock = sock;
+        
+        // Initialiseert beide datastreams
+        this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
+        this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
     }
 
     /**
@@ -36,8 +40,8 @@ public class ClientHandler extends Thread {
      * worden aangeroepen.
      */
     public void announce() throws IOException {
-        clientName = in.readLine();
-        server.broadcast("[" + clientName + " has entered]");
+   		clientName = in.readLine();
+   		server.broadcast("[" + clientName + " has entered]");
     }
 
     /**
@@ -50,17 +54,24 @@ public class ClientHandler extends Thread {
      * shutdown() aangeroepen.
      */
     public void run() {
-        // BODY NOG TOE TE VOEGEN
+        try {
+            while (true) {
+            	server.broadcast("[" + clientName + "] " + in.readLine());
+            }
+        } catch (IOException e) {
+            shutdown();
+        }
     }
 
     /**
      * Deze methode kan gebruikt worden om een bericht over de 
-     * socketverbinding naar de Client te sturen. Als het schrijven
-     * van het bericht mis gaat, dan concludeert de methode dat de
-     * socketverbinding verbroken is en roept shutdown() aan.
+     * socketverbinding naar de Client te sturen. Niet
+     * bereikbare clients worden al via de run-methode
+     * afgehandeld.
      */
     public void sendMessage(String msg) {
-        server.
+		out.println(msg);
+        out.flush();
     }
 
     /**

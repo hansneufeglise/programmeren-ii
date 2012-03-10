@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 public class ClientGUI extends JFrame implements ActionListener, MessageUI {
@@ -45,12 +46,15 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
         JLabel lbAddress = new JLabel("Address: ");
         tfAddress = new JTextField("localhost");
+        tfAddress.addKeyListener(new KeyHandler());
 
         JLabel lbPort = new JLabel("Port:");
         tfPort        = new JTextField("2727");
+        tfPort.addKeyListener(new KeyHandler());
 
         JLabel lbName = new JLabel("Name:");
         tfName        = new JTextField(12);
+        tfName.addKeyListener(new KeyHandler());
 
         pp1.add(lbAddress);
         pp1.add(tfAddress);
@@ -74,6 +78,19 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         JLabel lbMyMessage = new JLabel("My message:");
         tfMyMessage = new JTextField(34);
         tfMyMessage.setEditable(false);
+        tfMyMessage.addKeyListener(
+        		new KeyAdapter() {
+    				public void keyReleased(KeyEvent ev) {
+    					// Bij enter bericht versturen
+    					if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
+    						JTextField tx = (JTextField) ev.getSource();
+    						client.sendMessage(tx.getText());
+    						tx.setText("");
+    					}
+    				}
+        		}
+        		
+        );
         p2.add(lbMyMessage);
         p2.add(tfMyMessage, BorderLayout.SOUTH);
 
@@ -94,12 +111,26 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         cc.add(p2);
         cc.add(p3);
     }
+    
+    private class KeyHandler extends KeyAdapter {
+    	public void keyReleased (KeyEvent ev) {
+        	if (!tfAddress.getText().equals("") &&
+        			!tfPort.getText().equals("") &&
+        			!tfName.getText().equals(""))
+        	{
+        		bConnect.setEnabled(true);
+        	} else {
+        		bConnect.setEnabled(false);
+        	}
+    	}
+    }
 
     /** Afhandeling van een actie van het GUI. */
     public void actionPerformed(ActionEvent ev) {
         Object src = ev.getSource();
         if (src == bConnect) {
-            System.out.println("Pressed connect!");
+        	bConnect.setEnabled(false);
+            connect();
         }
     }
 
@@ -114,8 +145,33 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
      * niet selecteerbaar gemaakt.
      */
     public void connect() {
-        // BODY NOG TOE TE VOEGEN
-        addMessage("Connected to server...");
+    	// Hostname oplossen
+    	InetAddress address = null;
+        try {
+            address = InetAddress.getByName(tfAddress.getText());            
+        } catch (UnknownHostException e) {
+            addMessage("Host niet gevonden: " + tfAddress.getText());
+        }
+
+        if(address != null) {
+	        try {
+				client = new Client(tfName.getText(), address, Integer.parseInt(tfPort.getText()), this);
+	
+				new Thread(client).start();
+
+				tfAddress.setEditable(false);
+				tfPort.setEditable(false);
+				tfName.setEditable(false);
+
+				tfMyMessage.setEditable(true);
+			} catch (NumberFormatException e) {
+				addMessage(tfPort.getText() + " is geen poortnummer");
+			} catch (IOException e) {
+				addMessage("Kon geen socket maken op port " + tfPort.getText() + " en adres " + tfAddress.getText());
+				bConnect.setEnabled(true);
+			}
+        }
+
     }
 
     /** Voegt een bericht toe aan de TextArea op het frame. */
