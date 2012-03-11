@@ -38,6 +38,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     /** Bouwt de daadwerkelijke GUI. */
     private void buildGUI() {
         setSize(440,440);
+        setResizable(false);
 
         // Panel p1 - Listen
 
@@ -84,8 +85,10 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     					// Bij enter bericht versturen
     					if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
     						JTextField tx = (JTextField) ev.getSource();
-    						client.sendMessage(tx.getText());
-    						tx.setText("");
+    						if (!tx.getText().equals("")) {
+    							client.sendMessage(tx.getText());
+    							tx.setText("");
+    						}
     					}
     				}
         		}
@@ -102,8 +105,13 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         JLabel lbMessages = new JLabel("Messages:");
         taMessages = new JTextArea("", 15, 34);
         taMessages.setEditable(false);
+        taMessages.setLineWrap(true);
+        
+        JScrollPane spMessages = new JScrollPane(taMessages);
+        spMessages.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         p3.add(lbMessages);
-        p3.add(taMessages, BorderLayout.SOUTH);
+        p3.add(spMessages, BorderLayout.SOUTH);
 
         Container cc = getContentPane();
         cc.setLayout(new FlowLayout());
@@ -119,6 +127,10 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         			!tfName.getText().equals(""))
         	{
         		bConnect.setEnabled(true);
+        		
+				if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
+					actionPerformed(new ActionEvent(bConnect, 0, ""));
+				}
         	} else {
         		bConnect.setEnabled(false);
         	}

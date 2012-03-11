@@ -2,7 +2,9 @@ package week4.chatbox;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.net.*;
 
 /**
@@ -39,6 +41,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
     /** Bouwt de daadwerkelijke GUI. */
     public void buildGUI() {
         setSize(440, 400);
+        setResizable(false);
 
         // Panel p1 - Listen
 
@@ -51,6 +54,21 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
 
         JLabel lbPort = new JLabel("Port:");
         tfPort        = new JTextField("2727", 5);
+        tfPort.addKeyListener(
+        	new KeyAdapter() {
+    	    	public void keyReleased (KeyEvent ev) {
+    	        	if (!tfPort.getText().equals("")) {
+    	        		bConnect.setEnabled(true);
+    	        		
+    					if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
+    						actionPerformed(new ActionEvent(bConnect, 0, ""));
+    					}
+    	        	} else {
+    	        		bConnect.setEnabled(false);
+    	        	}
+    	    	}	
+    		}
+        );
 
         pp.add(lbAddress);
         pp.add(tfAddress);
@@ -71,12 +89,18 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         JLabel lbMessages = new JLabel("Messages:");
         taMessages = new JTextArea("", 15, 34);
         taMessages.setEditable(false);
+        taMessages.setLineWrap(true);
+
+        JScrollPane spMessages = new JScrollPane(taMessages);
+        spMessages.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         p2.add(lbMessages);
-        p2.add(taMessages, BorderLayout.SOUTH);
+        p2.add(spMessages, BorderLayout.SOUTH);
 
         Container cc = getContentPane();
         cc.setLayout(new FlowLayout());
-        cc.add(p1); cc.add(p2);
+        cc.add(p1);
+        cc.add(p2);
     }
 
     /** Levert het Internetadres van deze computer op. */
@@ -96,6 +120,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
     public void actionPerformed(ActionEvent ev) {
         Object src = ev.getSource();
         if (src == bConnect) {
+        	bConnect.setEnabled(false);
             startListening();
         }
     }
