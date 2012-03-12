@@ -85,5 +85,13 @@ public class Server extends Thread {
     public void removeHandler(ClientHandler handler) {
         this.threads.remove(handler);
     }
+    
+    /** Sluit de socketverbinding van deze server. */
+    public void shutdown() {
+        this.broadcast("Shutting down server...");
+        try {
+            this.server.close();
+        } catch (Exception e) { }
+    }
 
 } // end of class Server

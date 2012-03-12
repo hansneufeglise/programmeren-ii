@@ -18,6 +18,7 @@ public class Client extends Thread {
     private Socket          sock;
     private BufferedReader  in;
     private PrintWriter     out;
+    private boolean         connected = false;
 
     /**
      * Construeert een Client-object en probeert een socketverbinding
@@ -28,8 +29,12 @@ public class Client extends Thread {
         this.clientName = name;
         
         // Probeer socketverbinding met server te starten
-        this.sock = new Socket(host, port);
-        
+        try {
+            this.sock = new Socket(host, port);
+            this.connected = true;
+        } catch (IOException e) {
+            mui.addMessage("Kon geen verbinding maken met de server.");
+        }
         // I/O
         this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
         this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
@@ -46,8 +51,17 @@ public class Client extends Thread {
      */
     public void run() {
         try {
-            while (true) {
-                mui.addMessage(in.readLine());
+            String msg;
+            while (this.connected) {
+                if ((msg = in.readLine()) != null) {
+                    mui.addMessage(msg);
+                } else {
+                    mui.addMessage("Verbinding met server verbroken.");
+                    this.connected = false;
+                    /*
+                        TODO reinitalize view.
+                    */
+                }
             }
         } catch (Exception e) {
             shutdown();
@@ -62,7 +76,7 @@ public class Client extends Thread {
 
     /** Sluit de socketverbinding van deze client. */
     public void shutdown() {
-        mui.addMessage("Closing socket connection...");
+        mui.addMessage("Socket verbinding sluiten...");
 
         try {
             sock.shutdownInput();

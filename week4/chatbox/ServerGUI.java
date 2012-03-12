@@ -30,6 +30,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent e) {
                     e.getWindow().dispose();
+                    server.shutdown();
                 }
                 public void windowClosed(WindowEvent e) {
                     System.exit(0);
