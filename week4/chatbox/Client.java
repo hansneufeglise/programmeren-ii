@@ -29,12 +29,9 @@ public class Client extends Thread {
         this.clientName = name;
         
         // Probeer socketverbinding met server te starten
-        try {
-            this.sock = new Socket(host, port);
-            this.connected = true;
-        } catch (IOException e) {
-            mui.addMessage("Kon geen verbinding maken met de server.");
-        }
+        this.sock = new Socket(host, port);
+        this.connected = true;
+        
         // I/O
         this.in     = new BufferedReader(new InputStreamReader(this.sock.getInputStream()));
         this.out    = new PrintWriter(new OutputStreamWriter(this.sock.getOutputStream()));
@@ -58,9 +55,6 @@ public class Client extends Thread {
                 } else {
                     mui.addMessage("Verbinding met server verbroken.");
                     this.connected = false;
-                    /*
-                        TODO reinitalize view.
-                    */
                 }
             }
         } catch (Exception e) {
