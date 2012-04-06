@@ -165,7 +165,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
             addMessage("Host niet gevonden: " + tfAddress.getText());
         }
 
-        if(address != null) {
+        if (address != null) {
 	        try {
 				client = new Client(tfName.getText(), address, Integer.parseInt(tfPort.getText()), this);
 	
